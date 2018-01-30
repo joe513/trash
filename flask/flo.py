@@ -1,3 +1,4 @@
+import flask
 from flask import Flask
 
 app = Flask(__name__)
@@ -10,5 +11,5 @@ def hello():
 
 @app.route('/yes/<name>')
 def bomba(name):
-    return 'This is yes! %s ' % name
+    return flask.render_template('hello.html', name=name)
 
