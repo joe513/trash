@@ -1,6 +1,5 @@
 import socket
 import tkinter
-import os
 
 
 serv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, proto=0)
