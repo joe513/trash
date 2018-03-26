@@ -1,13 +1,21 @@
 #! /usr/local/bin/python3.6
 
-import socket
+from socket import *
 
-cl = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-cl.connect(('192.168.0.104', 53210))
+HOST = 'localhost'
+PORT = 21567
+BUFSIZE = 1024
+ADDR = (HOST, PORT)
+
+udpCliSock = socket(AF_INET, SOCK_DGRAM)
 
 while True:
     data = input('Enter: ')
-    cl.send(bytes(data, 'utf-8'))
-    r = cl.recv(1024)
-    print(r.decode('utf-8'))
+    if not data:
+        break
+    udpCliSock.sendto(bytes(data, 'utf-8'), ADDR)
+    data, ADDR  = udpCliSock.recvfrom(BUFSIZE)
+    if not data:
+        break
+    print(data.decode('utf-8'))
 
