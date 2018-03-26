@@ -1,35 +1,35 @@
-#! usr/local/bin/python3.6
-
-from socket import *
-from time import ctime
+import socket
+import tkinter
 
 
-HOST = ''
-PORT = 21567
-BUFSIZE = 1024
-ADDR = (HOST, PORT)
-
-sock = create_connection(ADDR)
-
-data, from_who = sock.recvfrom(BUFSIZE)
-sock.sendto(b'It will be ok', from_who)
+serv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, proto=0)
+serv_sock.bind(('192.168.0.104', 53210))  # Your IP and wanted port
+serv_sock.listen(10)  # How many clients can wait for you
 
 
-print('%s: %s' % (from_who, data))
+def tkinter_f():
+    tkinter.Tk()
+    tkinter.mainloop()
 
 
+def hello_world():
+    print("Hello world!")
 
 
+actions = {"tkinter": tkinter_f, "exit": lambda: client_sock.close(), 'hello': hello_world}
 
 
+while True:
+    client_sock, client_addr = serv_sock.accept()
 
-#
-# udpSerSock = socket(AF_INET, SOCK_DGRAM)
-# udpSerSock.bind(ADDR)
-#
-# while True:
-#     print("Waiting messsage")
-#     data, addr = udpSerSock.recvfrom(BUFSIZE)
-#     udpSerSock.sendto(b'[%s] %s' % (bytes(ctime(), 'utf-8'), data), addr)
-#     print('... recieved from returned to: ', addr)
-#
+    print('Connected by', client_addr)
+
+    while True:
+        data = client_sock.recv(1024).decode('utf-8')
+
+        if data in actions.keys():
+            actions[data]()
+
+        client_sock.send(b'I RECIEVED!')
+
+    client_sock.close()
